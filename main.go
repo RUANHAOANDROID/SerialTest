@@ -34,6 +34,7 @@ func pack() {
 func main() {
 	//pack()
 	log.Println("RS485-modbus-variant tools")
+	log.Println("Powered by hao88.cloud")
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print("输入COM口名称: ")
 	scanner.Scan()
