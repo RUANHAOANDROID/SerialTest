@@ -33,36 +33,38 @@ type ModbusPacket struct {
 
 func (p *ModbusPacket) Build() []byte {
 	packet := make([]byte, 8)
-
 	packet[0] = p.address
 	packet[1] = p.function
-
 	binary.BigEndian.PutUint16(packet[2:4], p.starting)
 	binary.BigEndian.PutUint16(packet[4:6], p.quantity)
-
-	crc := CalculateCRC(packet[:6])
-	binary.BigEndian.PutUint16(packet[6:], crc)
-
+	crc := calculateCRC(packet[:6])
+	packet[6] = crc[0]
+	packet[7] = crc[1]
 	return packet
 }
 
-func CalculateCRC(data []byte) uint16 {
+// 计算CRC16校验
+func calculateCRC(data []byte) []byte {
 	crc := uint16(0xFFFF)
+	polynomial := uint16(0xA001)
 
 	for _, b := range data {
 		crc ^= uint16(b)
 
 		for i := 0; i < 8; i++ {
-			if crc&0x0001 != 0 {
-				crc >>= 1
-				crc ^= 0xA001
-			} else {
-				crc >>= 1
+			lsb := crc & 0x0001
+			crc >>= 1
+
+			if lsb == 1 {
+				crc ^= polynomial
 			}
 		}
 	}
 
-	return crc
+	result := make([]byte, 2)
+	binary.LittleEndian.PutUint16(result, crc)
+
+	return result
 }
 
 func ParsePacket(data []byte) *ModbusPacket {

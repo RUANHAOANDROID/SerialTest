@@ -80,8 +80,6 @@ func inputAutoTest(port *serial.Port) {
 	cmd1[3] = 00
 	cmd1[4] = 00
 	cmd1[5] = 0x0A
-	cmd1[6] = 0xC5
-	cmd1[7] = 0xCD
 	status, err := port.Write(cmd1)
 	fmt.Printf("write len=%d err=%v \n", status, err)
 	readData(port)
