@@ -8,7 +8,7 @@ func GenerateFrame(slaveAddress, functionCode, startAddressHigh, startAddressLow
 	crc := calculateCRC([]byte{slaveAddress, functionCode, startAddressHigh, startAddressLow, coilCountHigh, coilCountLow})
 
 	// 构建通信帧
-	frame := []byte{slaveAddress, functionCode, startAddressHigh, startAddressLow, coilCountHigh, coilCountLow, crc[1], crc[0]}
+	frame := []byte{slaveAddress, functionCode, startAddressHigh, startAddressLow, coilCountHigh, coilCountLow, crc[0], crc[1]}
 
 	return frame
 }
